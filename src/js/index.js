@@ -24,54 +24,41 @@ function onInputSearch(event) {
   const userRequest = event.target.elements.searchQuery.value;
   if (!userRequest.trim().length) {
       Notify.failure('Please fill out the search field.');
-  
-    //   iziToast.warning({
-    //     message: 'This is the last page of Gallery',
-    //     position: 'topRight',
-    //     timeout: 5000,
-    //     closeOnClick: true,
-    //   });      
-  } else {
-    localStorage.setItem('currentRequest', userRequest);
 
-    fetchImageByRequest(userRequest, (page = 1))
-      .then(response => {
-        if (!response.data.hits.length) {
-          throw new Error(
-            // Notify.failure('Sorry, there are no images matching your search query. Please try again.')
-            iziToast.error({
-                message: `Sorry, there are no images matching your search query. Please try again.`,
+    } else {
+        localStorage.setItem('currentRequest', userRequest);
+
+        fetchImageByRequest(userRequest, (page = 1))
+        .then(response => {
+            if (!response.data.hits.length) {
+                throw new Error(
+                    // Notify.failure('Sorry, there are no images matching your search query. Please try again.')
+                    iziToast.error({
+                        message: `Sorry, there are no images matching your search query. Please try again.`,
+                        position: 'topRight',
+                        timeout: 4000,
+                        closeOnClick: true,
+                    })               
+                );
+            }
+
+            // Notify.success(`Hooray! We found ${response.data.totalHits} images.`);
+            iziToast.info({
+                message: `Hooray! We found ${response.data.totalHits} images.`,
                 position: 'topRight',
-                timeout: 4000,
+                timeout: 5000,
                 closeOnClick: true,
-            })               
-          );
-        }
-
-        // Notify.success(`Hooray! We found ${response.data.totalHits} images.`);
-        iziToast.info({
-            // title: 'Hooray!',
-            message: `Hooray! We found ${response.data.totalHits} images.`,
-            position: 'topRight',
-            timeout: 5000,
-            closeOnClick: true,
-        });         
-        renderImages(response.data.hits);
-        if (response.data.hits.length < 40) {
-          hideBtn();
-          setTimeout(() => {
-              Notify.info("We're sorry, but you've reached the end of search results.");
-            // iziToast.info({
-            //     message: We're sorry, but you've reached the end of search results.",
-            //     position: 'topRight',
-            //     timeout: 5000,
-            //     closeOnClick: true,
-            // });                   
-          }, 2000);
-        } else {
-          loadMoreBtn.classList.remove('hidden-btn');
-        }
-      })
+            });         
+            renderImages(response.data.hits);
+            if (response.data.hits.length < 40) {
+                hideBtn();
+                setTimeout(() => {
+                    Notify.info("We're sorry, but you've reached the end of search results.");
+                }, 2000);
+            } else {
+                loadMoreBtn.classList.remove('hidden-btn');
+            }
+        })
       .catch(error => console.log(error));
   }
 
