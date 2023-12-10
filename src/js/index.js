@@ -39,18 +39,18 @@ async function onInputSearch(event) {
       localStorage.setItem('currentRequest', userRequest);
       const { data } = await fetchImageByRequest(userRequest, (page = 1));
       if (!data.hits.length) {
-        throw new Error(
-          // Notify.failure('Sorry, there are no images matching your search query. Please try again.')
-          iziToast.error({
-            message: `Sorry, there are no images matching your search query. Please try again.`,
-            position: 'topRight',
-            timeout: 4000,
-            closeOnClick: true,
-          })
-        );
+        // throw new Error(
+          Notify.failure('Sorry, there are no images matching your search query. Please try again.');
+          // iziToast.error({
+          //   message: `Sorry, there are no images matching your search query. Please try again.`,
+          //   position: 'topRight',
+          //   timeout: 4000,
+          //   closeOnClick: true,
+          // });
+        // );
       }
 
-      // Notify.info(`Hooray! We found ${response.data.totalHits} images.`);
+      // Notify.info(`Hooray! We found ${data.totalHits} images.`);
       iziToast.info({
         message: `Hooray! We found ${data.totalHits} images.`,
         position: 'topRight',
